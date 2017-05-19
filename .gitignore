@@ -13,3 +13,7 @@
 *.lss
 *.map
 *.sym
+
+.idea/
+cmake-build-debug/
+src/
