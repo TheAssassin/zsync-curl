@@ -648,7 +648,7 @@ int range_fetch_read_http_headers(struct range_fetch *rf) {
         if (status == 206 && !strcmp(buf, "content-range")) {
             /* Okay, we're getting a non-MIME block from the remote. Get the
              * range and set our state appropriately */
-            off_t from, to;
+            off_t from = 0, to = 0;
             sscanf(p, "bytes " OFF_T_PF "-" OFF_T_PF "/", &from, &to);
             if (from <= to) {
                 rf->block_left = to + 1 - from;
@@ -779,7 +779,7 @@ int get_range_block(struct range_fetch *rf, off_t * offset, unsigned char *data,
 
             /* Otherwise, we're reading the MIME headers for this part until we get \r\n alone */
             for (; buf[0] != '\r' && buf[0] != '\n' && buf[0] != '\0';) {
-                off_t from, to;
+                off_t from = 0, to = 0;
 
                 /* Get next header */
                 if (!rfgets(buf, sizeof(buf), rf))
