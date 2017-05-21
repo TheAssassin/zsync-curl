@@ -38,10 +38,9 @@ endif()
 set(VERSION "0.6.2")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
+set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffast-math")
-
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
@@ -62,7 +61,6 @@ include_directories(${CURL_INCLUDE_DIR})
 
 add_executable(zsync_curl progress.c http.c url.c base64.c client.c)
 target_link_libraries(zsync_curl libzsync ${CURL_LIBRARY})
-set_property(TARGET zsync_curl PROPERTY C_STANDARD 99)
 
 install(TARGETS zsync_curl DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
