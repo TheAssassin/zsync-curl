@@ -38,15 +38,17 @@ endif()
 
 # config.h contains some global defines, our config.h.in is a modified version of the upstream config.h.in to make it integrate with CMake
 set(VERSION "0.6.2")
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+configure_file(src/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 set(CMAKE_C_STANDARD 99)
 add_definitions(-DHAVE_CONFIG_H)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffast-math")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s")
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(${CURL_INCLUDE_DIR})
 
 add_subdirectory(doc)
 add_subdirectory(librcksum)
@@ -60,14 +62,12 @@ if(NOT CURL_FOUND)
     message(FATAL_ERROR "libcurl not found!")
 endif()
 
-include_directories(${CURL_INCLUDE_DIR})
-
-add_executable(zsync_curl progress.c http.c url.c base64.c client.c)
+add_executable(zsync_curl src/progress.c src/http.c src/url.c src/base64.c src/client.c)
 target_link_libraries(zsync_curl libzsync ${CURL_LIBRARY})
 
 install(TARGETS zsync_curl DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
 # fixes error: 'PACKAGE' undeclared and its friends
-set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/client.c PROPERTY COMPILE_FLAGS "-include config.h")
+set_source_files_properties(src/client.c PROPERTY COMPILE_FLAGS "-include config.h")
 
 
